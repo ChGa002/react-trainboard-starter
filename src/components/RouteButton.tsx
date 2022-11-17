@@ -1,17 +1,17 @@
 import React from 'react';
+import { Dispatch } from 'react';
 import '../App.css';
-import { fetchFares } from '../helpers/ApiCallHelper';
 
 type RouteButtonProps = {
-    departure: string;
-    arrival: string;
+    clicked: boolean;
+    setClicked: Dispatch<boolean>;
 }
 
-const RouteButton: React.FC<RouteButtonProps> = ({ departure, arrival }) => {
+const RouteButton: React.FC<RouteButtonProps> = ({ clicked, setClicked }) => {
 
     return (
         <div>
-            <button className = "button" type = "button" onClick = { () => fetchFares(departure, arrival) }>Get Route</button>
+            <button className = "button" type = "button" onClick = { () => setClicked(true) }>Get Route</button>
         </div>
     );
 };
