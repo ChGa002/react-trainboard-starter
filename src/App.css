@@ -69,3 +69,15 @@
   color: white;
   cursor: pointer;
 }
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  width: 80%;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 8px rgba(0,0,0,0.2);
+  width: 82%;
+}
