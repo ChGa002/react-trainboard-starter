@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import { fetchFares } from '../helpers/ApiCallHelper';
 
 type RouteButtonProps = {
     departure: string;
@@ -7,13 +8,10 @@ type RouteButtonProps = {
 }
 
 const RouteButton: React.FC<RouteButtonProps> = ({ departure, arrival }) => {
-    const hyperlink = `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${departure}/${arrival}/#LiveDepResults`;
 
     return (
         <div>
-            <a href = { hyperlink }>
-                <button className = "button" type = "button">Get Route</button>
-            </a>
+            <button className = "button" type = "button" onClick = { () => fetchFares(departure, arrival) }>Get Route</button>
         </div>
     );
 };
