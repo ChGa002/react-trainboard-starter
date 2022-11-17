@@ -1,32 +1,16 @@
-import React, { Dispatch, useEffect, useState } from 'react';
-import { fetchFares, fetchStations } from '../helpers/ApiCallHelper';
+import React, { Dispatch, useEffect } from 'react';
+import { Fare, Ticket } from '../customTypes';
+import { fetchFares } from '../helpers/ApiCallHelper';
 
 type FaresListProps = {
-    setSearching: Dispatch<boolean>;
+    journeys: Fare[];
+    setJourneys: Dispatch<Fare[]>;
+    setIsFetching: Dispatch<boolean>;
     departure: string;
     arrival: string;
 }
 
-type Fare = {
-    arrivalTime: string;
-    departureTime: string;
-    destinationStation: string;
-    isFastestJourney: boolean;
-    minutes: number;
-    status: string;
-    tickets: Ticket[];
-}
-
-type Ticket =
-    {
-        description: string;
-        name: string;
-        price: number;
-        class: string;
-    }
-const FaresList: React.FC<FaresListProps> = ({ setSearching, departure, arrival }) => {
-
-    // const [allStations, setAllStations] = useState([]);
+const FaresList: React.FC<FaresListProps> = ({ journeys, setJourneys, setIsFetching, departure, arrival }) => {
 
     useEffect(() => {
         fetchFares(departure, arrival)
@@ -57,20 +41,21 @@ const FaresList: React.FC<FaresListProps> = ({ setSearching, departure, arrival 
                                 status: x.status,
                                 tickets: tickets,
                             });
-                            
                         }
+                        setJourneys(list);
+                        console.log(list);
                     });
             })
             .catch((err) => console.log(err))
             .finally(() => {
-                console.log('finally');
-                // setSearching(false);
+                setIsFetching(false);
             });
     }, []);
 
     return (
         <div>
-            LIST OF FARES
+            {journeys.toString()}
+            HELLO
         </div>
     );
 };
