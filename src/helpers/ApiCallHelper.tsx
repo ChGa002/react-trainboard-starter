@@ -8,6 +8,15 @@ export const fetchStations = () => {
     });
 };
 
+type journey = {
+    destinationStation: string;
+    departureTime: string;
+    arrivalTime: string;
+    status: string;
+    tickets: [];
+    minutes: number;
+
+}
 export const fetchFares = (departure: string, arrival: string) => {
 
     const date = '2022-11-23';
