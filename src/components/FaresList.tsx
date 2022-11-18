@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect, useState } from 'react';
-import { createTheme,ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
@@ -11,15 +11,15 @@ type FaresListProps = {
     arrival: string;
 }
 
-const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departure, arrival }) => {
-
+const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, departure, arrival }) => {
+    const [errorMessage, setErrorMessage] = useState('');
     const [journeys, setJourneys] = useState<Fare[]>([]);
     const defaultMaterialTheme = createTheme();
     useEffect(() => {
-        if (!isFetching)
-        {
+        if (!isFetching) {
             return;
         }
+        setErrorMessage('');
         fetchFares(departure, arrival)
             .then((response) => {
                 response.json().then(data => ({
@@ -30,7 +30,7 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departu
                         const list: Fare[] = [];
 
                         for (const x of res.data.outboundJourneys) {
-                            const tickets : Ticket[] = [];
+                            const tickets: Ticket[] = [];
                             for (const ticket of x.tickets) {
                                 tickets.push({
                                     description: ticket.description,
@@ -52,7 +52,10 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departu
                         setJourneys(list);
                     });
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                setErrorMessage('There was a problem, please try again later');
+                console.log(err);
+            })
             .finally(() => {
                 setIsFetching(false);
             });
@@ -69,10 +72,12 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departu
 
     return (
         <div>
+            {errorMessage != '' &&
+                <p> {errorMessage} </p>}
             {journeys.length != 0 &&
                 <div style = { { maxWidth: '100%' } }>
                     <ThemeProvider theme = { defaultMaterialTheme }>
-                        <MaterialTable columns = { columns } data = { journeys } title = 'Journeys' />
+                        <MaterialTable columns = { columns } data = { journeys } title = 'Journeys'/>
                     </ThemeProvider>
                 </div>
             }

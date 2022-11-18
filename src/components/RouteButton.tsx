@@ -3,14 +3,14 @@ import { Dispatch } from 'react';
 import '../App.css';
 
 type RouteButtonProps = {
-    setClicked: Dispatch<boolean>;
+    setIsFetching: Dispatch<boolean>;
 }
 
-const RouteButton: React.FC<RouteButtonProps> = ({ setClicked }) => {
+const RouteButton: React.FC<RouteButtonProps> = ({ setIsFetching }) => {
 
     return (
         <div>
-            <button className = "button" type = "button" onClick = { () => setClicked(true) }>Get Route</button>
+            <button className = "button" type = "button" onClick = { () => setIsFetching(true) }>Get Route</button>
         </div>
     );
 };

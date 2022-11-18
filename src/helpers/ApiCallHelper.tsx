@@ -1,22 +1,13 @@
 const baseURL = 'https://mobile-api-softwire2.lner.co.uk/v1';
 
 export const fetchStations = () => {
-    return fetch('https://mobile-api-softwire2.lner.co.uk/v1/stations', {
+    return fetch(`${baseURL}/stations`, {
         headers: {
             'X-API-KEY': `${process.env.REACT_APP_X_API_KEY}`,
         },
     });
 };
 
-type journey = {
-    destinationStation: string;
-    departureTime: string;
-    arrivalTime: string;
-    status: string;
-    tickets: [];
-    minutes: number;
-
-}
 export const fetchFares = (departure: string, arrival: string) => {
 
     const date = '2022-11-23';

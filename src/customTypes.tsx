@@ -8,10 +8,9 @@ export type Fare = {
     tickets: Ticket[];
 }
 
-export type Ticket =
-    {
-        description: string;
-        name: string;
-        price: number;
-        class: string;
-    }
+export type Ticket = {
+    description: string;
+    name: string;
+    price: number;
+    class: string;
+}
