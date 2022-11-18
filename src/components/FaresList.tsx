@@ -75,9 +75,18 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
             {errorMessage != '' &&
                 <p> {errorMessage} </p>}
             {journeys.length != 0 &&
-                <div style = { { maxWidth: '100%' } }>
+                <div style = { { maxWidth: '100%' } } className = "table">
                     <ThemeProvider theme = { defaultMaterialTheme }>
-                        <MaterialTable columns = { columns } data = { journeys } title = 'Journeys'/>
+                        <MaterialTable columns = { columns } data = { journeys } title = 'Journeys' options = { {
+                            rowStyle: {
+                                backgroundColor: '#77BBAA',
+                            },
+                            headerStyle: {
+                                backgroundColor: '#007777',
+                                color: 'white',
+                                fontSize: 25,
+                            },
+                        } } />
                     </ThemeProvider>
                 </div>
             }
