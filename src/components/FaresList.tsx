@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
+import { formatDateTime, minutesToHours, penniesToPounds } from '../helpers/dataTransformerHelper';
 
 type FaresListProps = {
     isFetching: boolean;
@@ -10,6 +11,23 @@ type FaresListProps = {
     departure: string;
     arrival: string;
 }
+
+const fareColumns = [
+    { title: 'Arrival time', field: 'arrivalTime' },
+    { title: 'Departure time', field: 'departureTime' },
+    { title: 'Destination station', field: 'destinationStation' },
+    { title: 'Fastest journey', field: 'isFastestJourney' },
+    { title: 'Duration', field: 'duration' },
+    { title: 'Status', field: 'status',
+        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' } },
+];
+
+const ticketColumns = [
+    { title: 'Name', field: 'name' },
+    { title: 'Description', field: 'description' },
+    { title: 'Price', field: 'price' },
+    { title: 'Class', field: 'class' },
+];
 
 const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, departure, arrival }) => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -35,21 +53,22 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                                 tickets.push({
                                     description: ticket.description,
                                     name: ticket.name,
-                                    price: ticket.priceInPennies,
+                                    price: penniesToPounds(ticket.priceInPennies),
                                     class: ticket.ticketClass,
                                 });
                             }
                             list.push({
-                                arrivalTime: x.arrivalTime,
-                                departureTime: x.departureTime,
+                                arrivalTime: formatDateTime(x.arrivalTime),
+                                departureTime: formatDateTime(x.departureTime),
                                 destinationStation: x.destinationStation.displayName,
                                 isFastestJourney: x.isFastestJourney,
-                                minutes: x.journeyDurationInMinutes,
+                                duration: minutesToHours(x.journeyDurationInMinutes),
                                 status: x.status,
                                 tickets: tickets,
                             });
                         }
                         setJourneys(list);
+                        console.log(list);
                     });
             })
             .catch((err) => {
@@ -61,23 +80,27 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
             });
     }, [isFetching]);
 
-    const columns = [
-        { title: 'Arrival time', field: 'arrivalTime' },
-        { title: 'Departure time', field: 'departureTime' },
-        { title: 'Destination station', field: 'destinationStation' },
-        { title: 'Fastest journey', field: 'isFastestJourney' },
-        { title: 'Duration', field: 'minutes' },
-        { title: 'Status', field: 'status' },
-    ];
-
     return (
         <div>
+            <link
+                rel = "stylesheet"
+                href = "https://fonts.googleapis.com/icon?family=Material+Icons"
+            />
             {errorMessage != '' &&
                 <p> {errorMessage} </p>}
             {journeys.length != 0 &&
                 <div style = { { maxWidth: '100%' } }>
                     <ThemeProvider theme = { defaultMaterialTheme }>
-                        <MaterialTable columns = { columns } data = { journeys } title = 'Journeys'/>
+                        <MaterialTable columns = { fareColumns } data = { journeys } title = 'Journeys' detailPanel = { [{
+                            icon: 'train',
+                            tooltip: 'Show tickets',
+                            render: rowData => {
+                                return (
+                                    <MaterialTable columns = { ticketColumns } data = { rowData.tickets } title = 'Tickets'/>
+                                );
+                            },
+                        }] }
+                        onRowClick = { (event, rowData, togglePanel) => togglePanel ? togglePanel() : null }/>
                     </ThemeProvider>
                 </div>
             }

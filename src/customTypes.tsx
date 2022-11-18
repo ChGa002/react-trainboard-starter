@@ -3,7 +3,7 @@ export type Fare = {
     departureTime: string;
     destinationStation: string;
     isFastestJourney: boolean;
-    minutes: number;
+    duration: string;
     status: string;
     tickets: Ticket[];
 }
@@ -11,6 +11,6 @@ export type Fare = {
 export type Ticket = {
     description: string;
     name: string;
-    price: number;
+    price: string;
     class: string;
 }
