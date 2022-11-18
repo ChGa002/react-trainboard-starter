@@ -1,4 +1,5 @@
 import React from 'react';
+import '../App.css';
 
 type RouteButtonProps = {
     departure: string;
@@ -11,7 +12,7 @@ const RouteButton: React.FC<RouteButtonProps> = ({ departure, arrival }) => {
     return (
         <div>
             <a href = { hyperlink }>
-                <button type = "button">Click</button>
+                <button className = "button" type = "button">Get Route</button>
             </a>
         </div>
     );
