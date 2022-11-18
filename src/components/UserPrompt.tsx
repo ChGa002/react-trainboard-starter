@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Fare } from '../customTypes';
 import FaresList from './FaresList';
 import RouteButton from './RouteButton';
 import StationSelection from './StationSelection';
@@ -19,9 +18,7 @@ const UserPrompt: React.FC = () => {
                 <RouteButton setClicked = { setIsFetching }/>
             </div>
             <div>
-
                 <FaresList isFetching = { isFetching } setIsFetching = { setIsFetching } departure = { departure } arrival = { arrival }/>
-
             </div>
         </>
     );

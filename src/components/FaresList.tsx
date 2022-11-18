@@ -1,10 +1,11 @@
 import React, { Dispatch, useEffect, useState } from 'react';
+import { createTheme,ThemeProvider } from '@mui/material';
+import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
 
 type FaresListProps = {
     isFetching: boolean;
-
     setIsFetching: Dispatch<boolean>;
     departure: string;
     arrival: string;
@@ -13,7 +14,7 @@ type FaresListProps = {
 const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departure, arrival }) => {
 
     const [journeys, setJourneys] = useState<Fare[]>([]);
-
+    const defaultMaterialTheme = createTheme();
     useEffect(() => {
         if (!isFetching)
         {
@@ -49,7 +50,6 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departu
                             });
                         }
                         setJourneys(list);
-                        console.log(list);
                     });
             })
             .catch((err) => console.log(err))
@@ -58,10 +58,24 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departu
             });
     }, [isFetching]);
 
+    const columns = [
+        { title: 'Arrival time', field: 'arrivalTime' },
+        { title: 'Departure time', field: 'departureTime' },
+        { title: 'Destination station', field: 'destinationStation' },
+        { title: 'Fastest journey', field: 'isFastestJourney' },
+        { title: 'Duration', field: 'minutes' },
+        { title: 'Status', field: 'status' },
+    ];
+
     return (
         <div>
-            {journeys.toString()}
-            HELLO
+            {journeys.length != 0 &&
+                <div style = { { maxWidth: '100%' } }>
+                    <ThemeProvider theme = { defaultMaterialTheme }>
+                        <MaterialTable columns = { columns } data = { journeys } title = 'Journeys' />
+                    </ThemeProvider>
+                </div>
+            }
         </div>
     );
 };
