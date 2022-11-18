@@ -61,6 +61,7 @@
   font-weight: bold;
   transition-duration: 0.4s;
   margin-top:20px;
+  margin-bottom: 20px;
 }
 
 .button:hover {

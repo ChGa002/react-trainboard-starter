@@ -1,5 +1,6 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
+import blue from '@mui/material/colors/blue';
 import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
@@ -14,7 +15,14 @@ type FaresListProps = {
 const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, departure, arrival }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [journeys, setJourneys] = useState<Fare[]>([]);
-    const defaultMaterialTheme = createTheme();
+    const defaultMaterialTheme = createTheme({
+        palette: {
+            background: {
+                default: '#007777',
+                paper: '#33AAAA',
+            },
+        },
+    });
     useEffect(() => {
         if (!isFetching) {
             return;
