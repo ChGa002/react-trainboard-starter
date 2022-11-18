@@ -95,12 +95,15 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                             icon: 'train',
                             tooltip: 'Show tickets',
                             render: rowData => {
+                                if (rowData.tickets.length === 0) {
+                                    return false;
+                                }
                                 return (
                                     <MaterialTable columns = { ticketColumns } data = { rowData.tickets } title = 'Tickets'/>
                                 );
                             },
                         }] }
-                        onRowClick = { (event, rowData, togglePanel) => togglePanel ? togglePanel() : null }/>
+                        onRowClick = { (event, rowData, togglePanel) => rowData?.tickets.length != 0 && togglePanel ? togglePanel() : false }  />
                     </ThemeProvider>
                 </div>
             }
