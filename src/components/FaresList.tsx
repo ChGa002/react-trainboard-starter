@@ -1,18 +1,24 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
 
 type FaresListProps = {
-    journeys: Fare[];
-    setJourneys: Dispatch<Fare[]>;
+    isFetching: boolean;
+
     setIsFetching: Dispatch<boolean>;
     departure: string;
     arrival: string;
 }
 
-const FaresList: React.FC<FaresListProps> = ({ journeys, setJourneys, setIsFetching, departure, arrival }) => {
+const FaresList: React.FC<FaresListProps> = ({ isFetching,setIsFetching, departure, arrival }) => {
+
+    const [journeys, setJourneys] = useState<Fare[]>([]);
 
     useEffect(() => {
+        if (!isFetching)
+        {
+            return;
+        }
         fetchFares(departure, arrival)
             .then((response) => {
                 response.json().then(data => ({
@@ -50,7 +56,7 @@ const FaresList: React.FC<FaresListProps> = ({ journeys, setJourneys, setIsFetch
             .finally(() => {
                 setIsFetching(false);
             });
-    }, []);
+    }, [isFetching]);
 
     return (
         <div>
