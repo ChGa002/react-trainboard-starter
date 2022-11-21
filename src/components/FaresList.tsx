@@ -1,5 +1,6 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
+import blue from '@mui/material/colors/blue';
 import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
@@ -18,8 +19,10 @@ const fareColumns = [
     { title: 'Destination station', field: 'destinationStation' },
     { title: 'Fastest journey', field: 'isFastestJourney' },
     { title: 'Duration', field: 'duration' },
-    { title: 'Status', field: 'status',
-        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' } },
+    {
+        title: 'Status', field: 'status',
+        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' },
+    },
 ];
 
 const ticketColumns = [
@@ -32,7 +35,14 @@ const ticketColumns = [
 const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, departure, arrival }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [journeys, setJourneys] = useState<Fare[]>([]);
-    const defaultMaterialTheme = createTheme();
+    const defaultMaterialTheme = createTheme({
+        palette: {
+            background: {
+                default: '#007777',
+                paper: '#33AAAA',
+            },
+        },
+    });
     useEffect(() => {
         if (!isFetching) {
             return;
@@ -89,7 +99,7 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
             {errorMessage != '' &&
                 <p> {errorMessage} </p>}
             {journeys.length != 0 &&
-                <div style = { { maxWidth: '100%' } }>
+                <div style = { { maxWidth: '100%' } } className = "table">
                     <ThemeProvider theme = { defaultMaterialTheme }>
                         <MaterialTable columns = { fareColumns } data = { journeys } title = 'Journeys' detailPanel = { [{
                             icon: 'train',
@@ -103,7 +113,17 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                                 );
                             },
                         }] }
-                        onRowClick = { (event, rowData, togglePanel) => rowData?.tickets.length != 0 && togglePanel ? togglePanel() : false }  />
+                        onRowClick = { (event, rowData, togglePanel) => rowData?.tickets.length != 0 && togglePanel ? togglePanel() : false }
+                        options = { {
+                            rowStyle: {
+                                backgroundColor: '#77BBAA',
+                            },
+                            headerStyle: {
+                                backgroundColor: '#007777',
+                                color: 'white',
+                                fontSize: 25,
+                            },
+                        } }/>
                     </ThemeProvider>
                 </div>
             }

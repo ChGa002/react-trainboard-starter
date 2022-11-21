@@ -25,13 +25,16 @@
   margin-top:20px;
   align-self: auto;
   font-size: inherit;
+  margin-bottom: 20px;
 }
 
 .button:hover {
   background-color: #007777;
   color: white;
   cursor: pointer;
-  transform: scale(1.1) perspective(1px)
+  transform: scale(1.1) perspective(1px);
+  box-shadow: 0 8px 16px 8px rgba(0,0,0,0.2);
+  width: 82%;
 }
 
 .parent{
@@ -39,6 +42,7 @@
   justify-content: space-around;
 }
 
+<<<<<<< HEAD
 .child{
   flex: auto;
   align-self: auto;
@@ -65,4 +69,9 @@
 
 h1{
   margin-bottom: 70px;
+}
+
+.table {
+  font-weight: normal;
+  font-size: calc(4px + 2vmin);
 }
