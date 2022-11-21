@@ -12,9 +12,9 @@ type StationsProps = {
     setIsFetching: Dispatch<boolean>;
 }
 
-const stationsColumns = [
-    { title: 'Stations', field: 'name' },
-];
+// const stationsColumns = [
+//     { title: 'Stations', field: 'name', defaultSort: 'asc' },
+// ];
 
 const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -39,6 +39,7 @@ const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
                                 name: x.name,
                             });
                         }
+                        list.sort();
                         setStations(list);
                         console.log(list);
                     });
@@ -63,7 +64,7 @@ const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
             {stations.length != 0 &&
                 <div style = { { maxWidth: '100%' } }>
                     <ThemeProvider theme = { defaultMaterialTheme }>
-                        <MaterialTable columns = { stationsColumns } data = { stations } title = 'Stations' />
+                        <MaterialTable columns = { [{ title: 'Stations', field: 'name', defaultSort: 'asc' }] } data = { stations } title = 'Stations' />
                     </ThemeProvider>
                 </div>
             }

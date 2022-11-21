@@ -18,6 +18,8 @@ const App = () => (
                 </Route>
             </Routes>
             <footer>
+                <Link to = "/">Home</Link>
+                <div></div>
                 <Link to = "/stations">Stations</Link>
             </footer>
         </div>
