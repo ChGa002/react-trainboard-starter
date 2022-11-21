@@ -9,7 +9,7 @@ type RouteButtonProps = {
 const RouteButton: React.FC<RouteButtonProps> = ({ setIsFetching }) => {
 
     return (
-        <div>
+        <div className = { 'parent' } >
             <button className = "button" type = "button" onClick = { () => setIsFetching(true) }>Get Route</button>
         </div>
     );

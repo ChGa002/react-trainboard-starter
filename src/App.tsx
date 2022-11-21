@@ -8,14 +8,20 @@ import UserPrompt from './components/UserPrompt';
 
 const App = () => (
     <BrowserRouter>
+        <link rel = "stylesheet"
+            href = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
         <div className = "App">
-            <StationContextProvider>
-                <UserPrompt/>
-            </StationContextProvider>
+            <h1>Trainboard <span className = "material-symbols-outlined"> train </span></h1>
+            <h2>Search for tickets</h2>
+            <div className = "cardBackground">
+                <StationContextProvider>
+                    <UserPrompt/>
+                </StationContextProvider>
+            </div>
             <Routes>
                 <Route path = "/stations">
                     <Route path = ":id" element = { <Station/> }/>
-       
+
                     <Route index element = { <Stations/> }/>
                 </Route>
             </Routes>
