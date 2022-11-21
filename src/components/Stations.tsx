@@ -1,9 +1,8 @@
 import React, { Dispatch, useEffect, useState } from 'react';
-import { fetchStations } from '../helpers/ApiCallHelper';
 import { createTheme, ThemeProvider } from '@mui/material';
 import MaterialTable from 'material-table';
-import {Fare, Ticket} from "../customTypes";
-
+import { Fare } from '../customTypes';
+import { fetchStations } from '../helpers/ApiCallHelper';
 
 export type StationsList = {
     name: string;
@@ -15,7 +14,7 @@ type StationsProps = {
 }
 
 const stationsColumns = [
-    { title: 'Stations', field: 'stations' },
+    { title: 'Stations', field: 'name' },
 ];
 
 const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
@@ -34,7 +33,7 @@ const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
                     status: response.status,
                 }))
                     .then(res => {
-                        const list = [];
+                        const list: StationsList[] = [];
 
                         for (const x of res.data.stations) {
                             list.push({
@@ -56,7 +55,6 @@ const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
 
     return (
         <div>
-            Stations!!
             <link
                 rel = "stylesheet"
                 href = "https://fonts.googleapis.com/icon?family=Material+Icons"
