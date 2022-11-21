@@ -1,24 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { fetchStations } from '../helpers/ApiCallHelper';
+import { createTheme, ThemeProvider } from '@mui/material';
+import MaterialTable from 'material-table';
+import {Fare, Ticket} from "../customTypes";
 
-const Stations: React.FC = () => {
 
-    const [allStations, setAllStations] = useState([]);
+export type StationsList = {
+    name: string;
+}
 
+type StationsProps = {
+    isFetching: boolean;
+    setIsFetching: Dispatch<boolean>;
+}
+
+const stationsColumns = [
+    { title: 'Stations', field: 'stations' },
+];
+
+const Stations: React.FC<StationsProps> = ({ isFetching, setIsFetching }) => {
+    const [errorMessage, setErrorMessage] = useState('');
+    const [stations, setStations] = useState<StationsList[]>([]);
+    const defaultMaterialTheme = createTheme();
     useEffect(() => {
+        if (!isFetching) {
+            return;
+        }
+        setErrorMessage('');
         fetchStations()
-            .then((value) => console.log(value))
-            .catch((err) => console.log(err))
-            .finally(() => console.log('finally'));
-    }, []);
+            .then((response) => {
+                response.json().then(data => ({
+                    data: data,
+                    status: response.status,
+                }))
+                    .then(res => {
+                        const list = [];
 
-    console.log('hello world');
+                        for (const x of res.data.stations) {
+                            list.push({
+                                name: x.name,
+                            });
+                        }
+                        setStations(list);
+                        console.log(list);
+                    });
+            })
+            .catch((err) => {
+                setErrorMessage('There was a problem, please try again later');
+                console.log(err);
+            })
+            .finally(() => {
+                setIsFetching(false);
+            });
+    }, [isFetching]);
 
     return (
         <div>
-            Stations!
+            Stations!!
+            <link
+                rel = "stylesheet"
+                href = "https://fonts.googleapis.com/icon?family=Material+Icons"
+            />
+            {errorMessage != '' &&
+                <p> {errorMessage} </p>}
+            {stations.length != 0 &&
+                <div style = { { maxWidth: '100%' } }>
+                    <ThemeProvider theme = { defaultMaterialTheme }>
+                        <MaterialTable columns = { stationsColumns } data = { stations } title = 'Stations' />
+                    </ThemeProvider>
+                </div>
+            }
         </div>
     );
 };
 
 export default Stations;
+
