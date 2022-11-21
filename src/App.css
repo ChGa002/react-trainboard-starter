@@ -1,6 +1,6 @@
 .App {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  background: #dde5f4;
+  background: #dbf2ff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,9 +11,9 @@
 }
 
 .button {
-  background-color: #00AAAA;
+  background-color: #5e619f;
   border: none;
-  color: black;
+  color: white;
   padding: 15px 26px;
   text-align: center;
   text-decoration: none;
@@ -29,7 +29,7 @@
 }
 
 .button:hover {
-  background-color: #007777;
+  background-color: #2e326f;
   color: white;
   cursor: pointer;
   transform: scale(1.1) perspective(1px);
@@ -69,14 +69,9 @@ h1{
   margin-bottom: 70px;
 }
 
-/*.MuiTableRow-root,.MuiButtonBase-root{*/
-/*  font-size: 20px;*/
-/*}*/
-
 .MuiTypography-root{
   font-weight: bold !important;
 }
-
 
 .spinner{
   width: 75px;
