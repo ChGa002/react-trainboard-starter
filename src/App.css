@@ -34,7 +34,6 @@
   cursor: pointer;
   transform: scale(1.1) perspective(1px);
   box-shadow: 0 8px 16px 8px rgba(0,0,0,0.2);
-  width: 82%;
 }
 
 .parent{
@@ -42,7 +41,6 @@
   justify-content: space-around;
 }
 
-<<<<<<< HEAD
 .child{
   flex: auto;
   align-self: auto;
@@ -71,7 +69,20 @@ h1{
   margin-bottom: 70px;
 }
 
-.table {
-  font-weight: normal;
-  font-size: calc(4px + 2vmin);
+/*.MuiTableRow-root,.MuiButtonBase-root{*/
+/*  font-size: 20px;*/
+/*}*/
+
+.MuiTypography-root{
+  font-weight: bold !important;
+}
+
+
+.spinner{
+  width: 75px;
+  height: 75px;
+}
+
+.MuiTableRow-root:hover {
+  background: #dedede !important
 }

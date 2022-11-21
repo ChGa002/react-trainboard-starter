@@ -1,6 +1,7 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import blue from '@mui/material/colors/blue';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
@@ -35,12 +36,23 @@ const ticketColumns = [
 const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, departure, arrival }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [journeys, setJourneys] = useState<Fare[]>([]);
-    const defaultMaterialTheme = createTheme({
+    const [selectedRow, setSelectedRow] = React.useState<string>('');
+    const mainTheme = createTheme({
+        typography: {
+            htmlFontSize: 11,
+        },
+    });
+
+    const ticketsTheme = createTheme({
+        typography: {
+            htmlFontSize: 11,
+        },
         palette: {
             background: {
-                default: '#007777',
-                paper: '#33AAAA',
+                default: '#dedede',
+                paper: '#dedede',
             },
+
         },
     });
     useEffect(() => {
@@ -96,11 +108,16 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                 rel = "stylesheet"
                 href = "https://fonts.googleapis.com/icon?family=Material+Icons"
             />
+            {isFetching && <Box className = { 'parent' }>
+                <CircularProgress size = { 50 } sx = { { marginBottom: '25px' } }  />
+            </Box> }
+
             {errorMessage != '' &&
                 <p> {errorMessage} </p>}
+
             {journeys.length != 0 &&
                 <div style = { { maxWidth: '100%' } } className = "table">
-                    <ThemeProvider theme = { defaultMaterialTheme }>
+                    <ThemeProvider theme = { mainTheme }>
                         <MaterialTable columns = { fareColumns } data = { journeys } title = 'Journeys' detailPanel = { [{
                             icon: 'train',
                             tooltip: 'Show tickets',
@@ -109,19 +126,42 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                                     return false;
                                 }
                                 return (
-                                    <MaterialTable columns = { ticketColumns } data = { rowData.tickets } title = 'Tickets'/>
+                                    <ThemeProvider theme = { ticketsTheme }>
+                                        <MaterialTable columns = { ticketColumns } data = { rowData.tickets } title = 'Tickets'
+                                            options = { {
+                                                headerStyle: {
+                                                    fontWeight: 'bold',
+                                                    color: '#4411A5',
+                                                },
+                                                paging: false,
+                                                search: false,
+                                            } }/>
+                                    </ThemeProvider>
                                 );
                             },
                         }] }
-                        onRowClick = { (event, rowData, togglePanel) => rowData?.tickets.length != 0 && togglePanel ? togglePanel() : false }
+                        onRowClick = { (event, rowData, togglePanel) => {
+                            if (rowData?.tickets.length != 0 && togglePanel)
+                            {
+                                if (selectedRow !== rowData?.departureTime)
+                                {
+                                    setSelectedRow(rowData?.departureTime || '');
+                                } else {
+                                    setSelectedRow('');
+                                }
+                                togglePanel();
+                            }
+                        }
+                        }
                         options = { {
-                            rowStyle: {
-                                backgroundColor: '#77BBAA',
-                            },
+                            detailPanelType: 'single',
+                            rowStyle: (rowData) => ({
+                                backgroundColor:
+                                    selectedRow === rowData.departureTime ? '#dedede' : '#FFF',
+                            }),
                             headerStyle: {
-                                backgroundColor: '#007777',
-                                color: 'white',
                                 fontSize: 25,
+                                fontWeight: 'bold',
                             },
                         } }/>
                     </ThemeProvider>
