@@ -9,10 +9,8 @@ import UserPrompt from './components/UserPrompt';
 const App = () => (
     <BrowserRouter>
         <div className = "App">
-            <StationContextProvider>
-                <UserPrompt/>
-            </StationContextProvider>
             <Routes>
+                <Route index element = { <UserPrompt/> }/>
                 <Route path = "/stations">
                     <Route path = ":id" element = { <Station/> }/>
        
@@ -27,3 +25,5 @@ const App = () => (
 );
 
 export default App;
+
+//<StationContextProvider></StationContextProvider>
