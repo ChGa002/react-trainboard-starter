@@ -1,7 +1,6 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import MaterialTable from 'material-table';
-import { Fare } from '../customTypes';
 import { fetchStations } from '../helpers/ApiCallHelper';
 
 export type StationsList = {
