@@ -1,5 +1,7 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import MaterialTable from 'material-table';
 import { Fare, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
@@ -18,8 +20,10 @@ const fareColumns = [
     { title: 'Destination station', field: 'destinationStation' },
     { title: 'Fastest journey', field: 'isFastestJourney' },
     { title: 'Duration', field: 'duration' },
-    { title: 'Status', field: 'status',
-        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' } },
+    {
+        title: 'Status', field: 'status',
+        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' },
+    },
 ];
 
 const ticketColumns = [
@@ -32,7 +36,25 @@ const ticketColumns = [
 const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, departure, arrival }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [journeys, setJourneys] = useState<Fare[]>([]);
-    const defaultMaterialTheme = createTheme();
+    const [selectedRow, setSelectedRow] = React.useState<string>('');
+    const mainTheme = createTheme({
+        typography: {
+            htmlFontSize: 11,
+        },
+    });
+
+    const ticketsTheme = createTheme({
+        typography: {
+            htmlFontSize: 11,
+        },
+        palette: {
+            background: {
+                default: '#dedede',
+                paper: '#dedede',
+            },
+
+        },
+    });
     useEffect(() => {
         if (!isFetching) {
             return;
@@ -86,21 +108,62 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                 rel = "stylesheet"
                 href = "https://fonts.googleapis.com/icon?family=Material+Icons"
             />
+            {isFetching && <Box className = { 'parent' }>
+                <CircularProgress size = { 50 } sx = { { marginBottom: '25px' } }  />
+            </Box> }
+
             {errorMessage != '' &&
                 <p> {errorMessage} </p>}
+
             {journeys.length != 0 &&
-                <div style = { { maxWidth: '100%' } }>
-                    <ThemeProvider theme = { defaultMaterialTheme }>
+                <div style = { { maxWidth: '100%' } } className = "table">
+                    <ThemeProvider theme = { mainTheme }>
                         <MaterialTable columns = { fareColumns } data = { journeys } title = 'Journeys' detailPanel = { [{
                             icon: 'train',
                             tooltip: 'Show tickets',
                             render: rowData => {
+                                if (rowData.tickets.length === 0) {
+                                    return false;
+                                }
                                 return (
-                                    <MaterialTable columns = { ticketColumns } data = { rowData.tickets } title = 'Tickets'/>
+                                    <ThemeProvider theme = { ticketsTheme }>
+                                        <MaterialTable columns = { ticketColumns } data = { rowData.tickets } title = 'Tickets'
+                                            options = { {
+                                                headerStyle: {
+                                                    fontWeight: 'bold',
+                                                    color: '#4411A5',
+                                                },
+                                                paging: false,
+                                                search: false,
+                                            } }/>
+                                    </ThemeProvider>
                                 );
                             },
                         }] }
-                        onRowClick = { (event, rowData, togglePanel) => togglePanel ? togglePanel() : null }/>
+                        onRowClick = { (event, rowData, togglePanel) => {
+                            if (rowData?.tickets.length != 0 && togglePanel)
+                            {
+                                if (selectedRow !== rowData?.departureTime)
+                                {
+                                    setSelectedRow(rowData?.departureTime || '');
+                                } else {
+                                    setSelectedRow('');
+                                }
+                                togglePanel();
+                            }
+                        }
+                        }
+                        options = { {
+                            detailPanelType: 'single',
+                            rowStyle: (rowData) => ({
+                                backgroundColor:
+                                    selectedRow === rowData.departureTime ? '#dedede' : '#FFF',
+                            }),
+                            headerStyle: {
+                                fontSize: 25,
+                                fontWeight: 'bold',
+                            },
+                        } }/>
                     </ThemeProvider>
                 </div>
             }

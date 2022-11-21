@@ -10,10 +10,16 @@ const UserPrompt: React.FC = () => {
 
     return (
         <>
-            <h2> Departure Station </h2>
-            <StationSelection setter = { setDeparture }/>
-            <h2> Arrival Station </h2>
-            <StationSelection setter = { setArrival }/>
+            <div className = { 'parent' }>
+                <div className = { 'child' }>
+                    <h3> Departure Station </h3>
+                    <StationSelection setter = { setDeparture }/>
+                </div>
+                <div className = { 'child' }>
+                    <h3> Arrival Station </h3>
+                    <StationSelection setter = { setArrival }/>
+                </div>
+            </div>
             <RouteButton setIsFetching = { setIsFetching }/>
             <FaresList isFetching = { isFetching } setIsFetching = { setIsFetching } departure = { departure } arrival = { arrival }/>
         </>
