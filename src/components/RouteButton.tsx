@@ -1,19 +1,16 @@
 import React from 'react';
+import { Dispatch } from 'react';
 import '../App.css';
 
 type RouteButtonProps = {
-    departure: string;
-    arrival: string;
+    setIsFetching: Dispatch<boolean>;
 }
 
-const RouteButton: React.FC<RouteButtonProps> = ({ departure, arrival }) => {
-    const hyperlink = `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${departure}/${arrival}/#LiveDepResults`;
+const RouteButton: React.FC<RouteButtonProps> = ({ setIsFetching }) => {
 
     return (
         <div>
-            <a href = { hyperlink }>
-                <button className = "button" type = "button">Get Route</button>
-            </a>
+            <button className = "button" type = "button" onClick = { () => setIsFetching(true) }>Get Route</button>
         </div>
     );
 };
