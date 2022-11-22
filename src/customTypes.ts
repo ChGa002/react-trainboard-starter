@@ -1,3 +1,5 @@
+import JourneyOption from './models/JourneyOption';
+
 export type Fare = {
     arrivalTime: string;
     departureTime: string;
@@ -13,4 +15,13 @@ export type Ticket = {
     name: string;
     price: string;
     class: string;
+}
+
+export class FaresResponse extends Response {
+    'numberOfAdults': number;
+    'numberOfChildren': number;
+    'outboundJourneys': JourneyOption[];
+    'nextOutboundQuery': string;
+    'previousOutboundQuery': string;
+    'bookingMessages': any;
 }

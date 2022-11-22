@@ -9,13 +9,13 @@ const stations = [
     { label: 'Leeds', value: 'LDS' }];
 
 type StationSelectionProps = {
-    setter: Dispatch<string>;
+    setStation: Dispatch<string>;
 }
 
-const StationSelection: React.FC<StationSelectionProps> = ({ setter }) => {
+const StationSelection: React.FC<StationSelectionProps> = ({ setStation }) => {
 
     return (
-        <Select options = { stations } onChange = { (e) => setter(e?.value || '') } />
+        <Select options = { stations } onChange = { (station) => setStation(station?.value || '') } />
     );
 };
 

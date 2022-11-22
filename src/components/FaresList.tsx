@@ -1,9 +1,9 @@
 import React, { Dispatch, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import MaterialTable from 'material-table';
-import { Fare, Ticket } from '../customTypes';
+import { Fare, FaresResponse, Ticket } from '../customTypes';
 import { fetchFares } from '../helpers/ApiCallHelper';
-import { formatDateTime, minutesToHours, penniesToPounds } from '../helpers/dataTransformerHelper';
+import JourneyOption from '../models/JourneyOption';
 
 type FaresListProps = {
     isFetching: boolean;
@@ -13,13 +13,15 @@ type FaresListProps = {
 }
 
 const fareColumns = [
-    { title: 'Arrival time', field: 'arrivalTime' },
     { title: 'Departure time', field: 'departureTime' },
+    { title: 'Arrival time', field: 'arrivalTime' },
     { title: 'Destination station', field: 'destinationStation' },
     { title: 'Fastest journey', field: 'isFastestJourney' },
     { title: 'Duration', field: 'duration' },
-    { title: 'Status', field: 'status',
-        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' } },
+    {
+        title: 'Status', field: 'status',
+        lookup: { 'fully_reserved': 'Full', 'normal': 'Available tickets' },
+    },
 ];
 
 const ticketColumns = [
@@ -33,58 +35,39 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
     const [errorMessage, setErrorMessage] = useState('');
     const [journeys, setJourneys] = useState<Fare[]>([]);
     const defaultMaterialTheme = createTheme();
-    useEffect(() => {
-        if (!isFetching) {
-            return;
-        }
-        setErrorMessage('');
-        fetchFares(departure, arrival)
-            .then((response) => {
-                response.json().then(data => ({
-                    data: data,
-                    status: response.status,
-                }))
-                    .then(res => {
-                        const list: Fare[] = [];
 
-                        for (const x of res.data.outboundJourneys) {
-                            const tickets: Ticket[] = [];
-                            for (const ticket of x.tickets) {
-                                tickets.push({
-                                    description: ticket.description,
-                                    name: ticket.name,
-                                    price: penniesToPounds(ticket.priceInPennies),
-                                    class: ticket.ticketClass,
-                                });
-                            }
-                            list.push({
-                                arrivalTime: formatDateTime(x.arrivalTime),
-                                departureTime: formatDateTime(x.departureTime),
-                                destinationStation: x.destinationStation.displayName,
-                                isFastestJourney: x.isFastestJourney,
-                                duration: minutesToHours(x.journeyDurationInMinutes),
-                                status: x.status,
-                                tickets: tickets,
-                            });
-                        }
-                        setJourneys(list);
-                        console.log(list);
-                    });
-            })
-            .catch((err) => {
-                setErrorMessage('There was a problem, please try again later');
-                console.log(err);
-            })
-            .finally(() => {
-                setIsFetching(false);
-            });
+    const fetchInformation = async () => {
+        setErrorMessage('');
+        setIsFetching(true);
+        try {
+            const upcomingDeparturesInformation = await fetchFares(departure, arrival);
+            updateJourneysFromResponse(upcomingDeparturesInformation as FaresResponse);
+        } catch (e) {
+            setErrorMessage('There was a problem, please try again later');
+            console.log(e);
+        }
+        setIsFetching(false);
+    };
+    const updateJourneysFromResponse = (faresResponse: FaresResponse) => {
+        const upcomingDeparturesInformation = faresResponse.outboundJourneys.reduce((list: Fare[], journey: JourneyOption) => {
+            list.push(new JourneyOption(journey).toFare());
+            return list;
+        }, new Array<Fare>());
+        setJourneys(upcomingDeparturesInformation);
+    };
+
+    useEffect(() => {
+        if (isFetching)
+        {
+            fetchInformation();
+        }
     }, [isFetching]);
 
     return (
         <div>
             <link
-                rel = "stylesheet"
-                href = "https://fonts.googleapis.com/icon?family=Material+Icons"
+                rel = 'stylesheet'
+                href = 'https://fonts.googleapis.com/icon?family=Material+Icons'
             />
             {errorMessage != '' &&
                 <p> {errorMessage} </p>}
@@ -103,12 +86,14 @@ const FaresList: React.FC<FaresListProps> = ({ isFetching, setIsFetching, depart
                                 );
                             },
                         }] }
-                        onRowClick = { (event, rowData, togglePanel) => rowData?.tickets.length != 0 && togglePanel ? togglePanel() : false }  />
+                        onRowClick = { (event, rowData, togglePanel) => rowData?.tickets.length != 0 && togglePanel ? togglePanel() : false }/>
                     </ThemeProvider>
                 </div>
             }
         </div>
     );
-};
+}
+
+;
 
 export default FaresList;
